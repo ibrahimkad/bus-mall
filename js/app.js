@@ -1,3 +1,6 @@
+var testView = [];
+var testClick = [];
+var repeat = [];
 var images = [
   "bag.jpg",
   "banana.jpg",
@@ -62,26 +65,45 @@ function renderImages() {
   leftProduct = Product.all[randomNumber(0, Product.all.length - 1)];
   centerProduct = Product.all[randomNumber(0, Product.all.length - 1)];
   rightProduct = Product.all[randomNumber(0, Product.all.length - 1)];
-  if (leftProduct=== centerProduct || centerProduct === rightProduct || leftProduct === rightProduct) {
+  if (leftProduct === centerProduct || centerProduct === rightProduct || leftProduct === rightProduct) {
     renderImages();
   }
+
 
   leftImage.src = leftProduct.imagePath;
   leftImage.alt = leftProduct.productName;
   leftImage.title = leftProduct.productName;
   leftProduct.views++;
-
+  
   centerImage.src = centerProduct.imagePath;
   centerImage.alt = centerProduct.productName;
   centerImage.title = centerProduct.productName;
   centerProduct.views++;
-
+  
   rightImage.src = rightProduct.imagePath;
   rightImage.alt = rightProduct.productName;
   rightImage.title = rightProduct.productName;
   rightProduct.views++;
 }
 renderImages();
+antiIteration();
+
+
+//new feature to prevent iteration------------------------
+repeat.push(leftProduct);
+repeat.push(centerProduct);
+repeat.push(rightProduct);
+
+
+function antiIteration() {
+  if (repeat[0] === leftProduct || repeat[1] === centerProduct || repeat[3] === rightProduct) {
+    renderImages();
+  } else {
+  }
+  repeat = [];
+}
+//called 89
+//end of feature------------------------------
 
 //(5) add the event listener to render new images
 // (5) Where should we add the event listener(for the left or right/ to imagesSection will be better since we will have only one clickListener )
@@ -109,9 +131,10 @@ function handleClick(event) {
       }
       renderImages();
     }
-  } else if(totalClicks ===25 ) {
+  } else if (totalClicks === 25) {
     imagesSection.removeEventListener('click', handleClick);
     renderResults();
+    renderChart();
   }
 }
 
@@ -121,6 +144,8 @@ function renderResults() {
     var li = document.createElement('li');
     li.textContent = `${Product.all[i].productName} has clicked ${Product.all[i].clicks} and has viewed ${Product.all[i].views}`;
     ulE1.append(li);
+    testClick.push(Product.all[i].clicks);
+    testView.push(Product.all[i].views);
   }
 }
 
@@ -135,3 +160,53 @@ function renderResults() {
 function randomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+
+function renderChart() {
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'sweep', 'tauntaun', 'unicorn', 'usb', 'water-can'],
+      datasets: [{
+        label: '# of Votes',
+        data: testClick,
+        // backgroundColor: [
+        //   'rgba(255, 99, 132, 0.2)'
+        // ],
+        // borderColor: [
+        //   'rgba(255, 99, 132, 1)'
+        // ],
+        borderWidth: 1,
+      },
+      {
+        label: '# of Views',
+        data: testView,
+        // backgroundColor: [
+        //   'rgba(150, 199, 100, 0.2)'
+        // ],
+        // borderColor: [
+        //   'rgba(255, 99, 132, 1)'
+        // ],
+        borderWidth: 1,
+      }]
+
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+}
+
+
+
+
+
+
+// ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum','chair','cthulhu','dog-duck','dragon','pen','pet-sweep','scissors','shark','sweep','tauntaun','unicorn','usb','water-can'],
