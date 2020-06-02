@@ -1,6 +1,7 @@
 var testView = [];
 var testClick = [];
-var repeat = [];
+var repeatNew = [];
+var repeatOld = [];
 var images = [
   "bag.jpg",
   "banana.jpg",
@@ -65,42 +66,105 @@ function renderImages() {
   leftProduct = Product.all[randomNumber(0, Product.all.length - 1)];
   centerProduct = Product.all[randomNumber(0, Product.all.length - 1)];
   rightProduct = Product.all[randomNumber(0, Product.all.length - 1)];
+  //--------
+
+  //-------
   if (leftProduct === centerProduct || centerProduct === rightProduct || leftProduct === rightProduct) {
     renderImages();
+
   }
 
+  repeatOld[0] = leftProduct;
+  repeatOld[1] = centerProduct;
+  repeatOld[2] = rightProduct;
+  for (var i = 0; i < 3; i++) {
+    if (repeatNew[0] === repeatOld[i]) {
+      // repeatNew.includes("repeatOld[0]");
+      //repeatNew.includes(element, start)
+      // console.log(repeatOld[0]);
+      leftProduct = Product.all[randomNumber(0, Product.all.length - 1)];
+
+      // centerProduct = Product.all[randomNumber(0, Product.all.length - 1)];
+      // rightProduct = Product.all[randomNumber(0, Product.all.length - 1)]
+
+
+      // renderImages();
+    }
+    if (repeatNew[1] === repeatOld[i]) {
+      centerProduct = Product.all[randomNumber(0, Product.all.length - 1)];
+      // renderImages();
+    }
+    if (repeatNew[2] === repeatOld[i]) {
+      rightProduct = Product.all[randomNumber(0, Product.all.length - 1)];
+      // renderImages();
+    }
+    if (leftProduct === centerProduct || centerProduct === rightProduct || leftProduct === rightProduct) {
+        renderImages();
+
+    }
+  }
 
   leftImage.src = leftProduct.imagePath;
   leftImage.alt = leftProduct.productName;
   leftImage.title = leftProduct.productName;
   leftProduct.views++;
-  
+
   centerImage.src = centerProduct.imagePath;
   centerImage.alt = centerProduct.productName;
   centerImage.title = centerProduct.productName;
   centerProduct.views++;
-  
+
   rightImage.src = rightProduct.imagePath;
   rightImage.alt = rightProduct.productName;
   rightImage.title = rightProduct.productName;
   rightProduct.views++;
 }
+//
+
 renderImages();
-antiIteration();
+
+
 
 
 //new feature to prevent iteration------------------------
-repeat.push(leftProduct);
-repeat.push(centerProduct);
-repeat.push(rightProduct);
 
 
+// console.log("before function", repeat);
 function antiIteration() {
-  if (repeat[0] === leftProduct || repeat[1] === centerProduct || repeat[3] === rightProduct) {
-    renderImages();
-  } else {
-  }
-  repeat = [];
+  // for (var i = 0; i < 3; i++) {
+  repeatNew = repeatOld;
+  // if (repeat[i] === leftProduct || repeat[i] === centerProduct || repeat[i] === rightProduct) {
+  //   renderImages();
+  //   // console.log("repeatInside", repeat[i]);
+  //   // leftProduct = Product.all[randomNumber(0, Product.all.length - 1)];
+  //   // centerProduct = Product.all[randomNumber(0, Product.all.length - 1)];
+  //   // rightProduct = Product.all[randomNumber(0, Product.all.length - 1)]
+
+  // }
+  // if (repeat[1] === leftProduct || repeat[1] === centerProduct || repeat[1] === rightProduct) {
+  //   renderImages();
+  //   console.log("repeat0=1",repeat[1]);
+  //   // leftProduct = Product.all[randomNumber(0, Product.all.length - 1)];
+  //   // centerProduct = Product.all[randomNumber(0, Product.all.length - 1)];
+  //   // rightProduct = Product.all[randomNumber(0, Product.all.length - 1)];
+
+  // }
+  // if (repeat[2] === leftProduct || repeat[2] === centerProduct || repeat[2] === rightProduct) {
+  //   renderImages();
+  //   console.log("repeat2",repeat[2]);
+  //   // rightProduct = Product.all[randomNumber(0, Product.all.length - 1)];
+  //   // centerProduct = Product.all[randomNumber(0, Product.all.length - 1)];
+  //   // leftProduct = Product.all[randomNumber(0, Product.all.length - 1)];
+
+  // }
+  // }
+  // if (repeat[0] === leftProduct || repeat[1] === centerProduct || repeat[2] === rightProduct) {
+  //   renderImages();
+  // } else {
+  // }
+  // repeat = [];
+  // console.log("repeatAfter ",repeat);
+
 }
 //called 89
 //end of feature------------------------------
@@ -113,6 +177,8 @@ function antiIteration() {
 imagesSection.addEventListener('click', handleClick);
 
 function handleClick(event) {
+  // antiIteration();
+
   // console.log(event);
   // console.log(event.target);
   // console.log(event.target.id);
@@ -129,13 +195,18 @@ function handleClick(event) {
       if (event.target.id === 'centerImage') {
         centerProduct.clicks++;
       }
+      antiIteration();
       renderImages();
     }
   } else if (totalClicks === 25) {
     imagesSection.removeEventListener('click', handleClick);
     renderResults();
     renderChart();
+    //lab13
+    storeProduct();
   }
+  // antiIteration();
+
 }
 
 function renderResults() {
@@ -204,9 +275,20 @@ function renderChart() {
   });
 }
 
+// store product-line165
+function storeProduct() {
+  var productsArray = JSON.stringify(Product.all);
+  localStorage.setItem('product', productsArray);
+}
 
-
-
-
-
-// ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum','chair','cthulhu','dog-duck','dragon','pen','pet-sweep','scissors','shark','sweep','tauntaun','unicorn','usb','water-can'],
+//get all products
+function getProducts() {
+  var productsArray = localStorage.getItem('product');
+  // console.log(productsArray);
+  // console.log(Product.all);
+  if (productsArray) {
+    Product.all = JSON.parse(productsArray);
+    // renderResults();
+  }
+}
+getProducts();
