@@ -6,6 +6,26 @@ body {
     margin: 0 auto;
     text-align: center;
 }
+header nav ul li{
+    color: gold;
+    font-size:x-large;
+    display: inline-block;
+    text-decoration-color: gold;
+    margin-top: 50px;
+    margin-right: 50px;
+    margin-bottom: 50px;
+    text-decoration: none;
+
+}
+header nav:hover{
+    transition-property: border-radius,background-color;
+    transition-duration: 2s;
+    border-radius: 5px;
+    background-color: greenyellow;
+}
+header nav ul li :link {
+    color: red;
+  }
 img {
     width: 300px;
     height: 300px;
@@ -13,4 +33,22 @@ img {
     padding: 10px;
     margin: 10px;
     border-radius: 5px;
+}
+@keyframes lighting {
+    0%{
+        color: red;
+    }
+    50%{
+        color: beige;
+    }
+    100%{
+        color: brown;
+    }
+}
+header h1{
+    animation-name:lighting ;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    text-align: center;
+    border: chartreuse solid 5px;
 }
